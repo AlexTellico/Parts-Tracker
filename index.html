@@ -436,10 +436,10 @@ async function sendEmailNotification(order) {
       </table>
     </div></div>`;
   try {
-    await fetch('https://api.resend.com/emails', {
+    await fetch('https://qanskptkvttfaaocauzh.supabase.co/functions/v1/send-order-email', {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + resendKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: 'Parts Tracker <onboarding@resend.dev>', to: [notifyEmail], subject: (order.priority === 'urgent' ? '[URGENT] ' : '') + 'New Parts Request: ' + order.part, html })
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+      body: JSON.stringify(order)
     });
   } catch(e) { console.warn('Email failed:', e); }
 }
