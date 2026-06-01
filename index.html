@@ -155,6 +155,10 @@
         <input type="text" id="f-part" placeholder="e.g. 3/8 in. NPT Ball Valve, Stainless">
       </div>
       <div class="form-group">
+        <label>Shipping Location <span class="req-mark">*</span></label>
+        <input type="text" id="f-location" placeholder="e.g. Warehouse B, Job Site 4">
+      </div>
+      <div class="form-group">
         <label>Quantity <span class="req-mark">*</span></label>
         <input type="number" id="f-qty" placeholder="1" min="1" value="1">
       </div>
@@ -293,6 +297,7 @@ async function sendEmailNotification(order) {
           <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Part</td><td style="padding:8px 0;font-weight:500;">${esc(order.part)}</td></tr>
           ${order.partnum ? `<tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Part #</td><td style="padding:8px 0;font-family:monospace;">${esc(order.partnum)}</td></tr>` : ''}
           <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Quantity</td><td style="padding:8px 0;">${order.qty}</td></tr>
+          ${order.shipping_location ? `<tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Ship To</td><td style="padding:8px 0;">${esc(order.shipping_location)}</td></tr>` : ''}
           <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Priority</td><td style="padding:8px 0;">${order.priority.charAt(0).toUpperCase() + order.priority.slice(1)}</td></tr>
           ${order.notes ? `<tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;vertical-align:top;">Notes</td><td style="padding:8px 0;font-style:italic;">${esc(order.notes)}</td></tr>` : ''}
           <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Date</td><td style="padding:8px 0;">${esc(order.date)}</td></tr>
@@ -383,6 +388,7 @@ async function loadOrders() {
 async function submitOrder() {
   const name = document.getElementById('f-name').value.trim();
   const part = document.getElementById('f-part').value.trim();
+  const location = document.getElementById('f-location').value.trim();
   const qty = parseInt(document.getElementById('f-qty').value) || 1;
   const priority = document.getElementById('f-priority').value;
   const partnum = document.getElementById('f-partnum').value.trim();
@@ -390,6 +396,7 @@ async function submitOrder() {
 
   if (!name) { alert('Please enter your name.'); return; }
   if (!part) { alert('Please enter a part description.'); return; }
+  if (!location) { alert('Please enter a shipping location.'); return; }
 
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
@@ -398,7 +405,7 @@ async function submitOrder() {
   showSuccess('order-success', '');
 
   const payload = {
-    name, part, partnum, qty, priority, notes,
+    name, part, partnum, qty, priority, notes, shipping_location: location,
     status: 'pending',
     date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     ts: Date.now()
@@ -423,6 +430,7 @@ async function submitOrder() {
   // Clear form (keep name for convenience)
   document.getElementById('f-part').value = '';
   document.getElementById('f-partnum').value = '';
+  document.getElementById('f-location').value = '';
   document.getElementById('f-qty').value = '1';
   document.getElementById('f-priority').value = 'normal';
   document.getElementById('f-notes').value = '';
@@ -512,6 +520,7 @@ function orderRowHTML(o, isManage) {
         <div class="order-meta">
           <span>Qty: <strong>${o.qty}</strong></span>
           <span>By: ${esc(o.name)}</span>
+          ${o.shipping_location ? `<span>&#128205; ${esc(o.shipping_location)}</span>` : ''}
           <span>${esc(o.date || '')}</span>
         </div>
         ${o.notes ? `<div class="order-notes">&ldquo;${esc(o.notes)}&rdquo;</div>` : ''}
