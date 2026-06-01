@@ -21,11 +21,38 @@
   }
   body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
 
+  /* LOGIN SCREEN */
+  .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+  .login-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 36px 32px; width: 100%; max-width: 360px; }
+  .login-logo { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+  .login-logo span { width: 8px; height: 8px; background: #4ADE80; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+  .login-box h2 { font-size: 20px; font-weight: 500; margin-bottom: 6px; }
+  .login-box p { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+  .login-box label { font-size: 12px; font-weight: 500; color: var(--text2); display: block; margin-bottom: 5px; }
+  .login-box input { width: 100%; font-family: var(--font); font-size: 14px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 9px 12px; outline: none; margin-bottom: 12px; transition: border-color 0.15s; }
+  .login-box input:focus { border-color: var(--accent); background: #fff; }
+  .login-box button { width: 100%; font-family: var(--font); font-size: 14px; font-weight: 500; padding: 10px; border-radius: var(--r); border: none; background: var(--accent); color: #fff; cursor: pointer; transition: background 0.15s; }
+  .login-box button:hover { background: #1240B0; }
+  .login-error { background: var(--danger-bg); color: var(--danger); border: 1px solid #FCA5A5; border-radius: var(--r); padding: 9px 12px; font-size: 13px; margin-bottom: 12px; display: none; }
+
+  /* ADMIN PASSWORD MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; display: flex; align-items: center; justify-content: center; }
+  .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; width: 100%; max-width: 340px; }
+  .modal-box h3 { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+  .modal-box p { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
+  .modal-box input { width: 100%; font-family: var(--font); font-size: 14px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 9px 12px; outline: none; margin-bottom: 10px; transition: border-color 0.15s; }
+  .modal-box input:focus { border-color: var(--accent); background: #fff; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+  .modal-error { background: var(--danger-bg); color: var(--danger); border: 1px solid #FCA5A5; border-radius: var(--r); padding: 8px 12px; font-size: 12px; margin-bottom: 10px; display: none; }
+
   /* HEADER */
   .header { background: var(--text); color: #fff; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 52px; position: sticky; top: 0; z-index: 100; }
   .header-brand { font-family: var(--mono); font-size: 15px; font-weight: 500; letter-spacing: -0.3px; display: flex; align-items: center; gap: 10px; }
   .header-brand span { width: 8px; height: 8px; background: #4ADE80; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .logout-btn { background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); font-family: var(--font); font-size: 12px; padding: 4px 10px; border-radius: var(--r); cursor: pointer; transition: all 0.15s; }
+  .logout-btn:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
   .tab-bar { display: flex; }
   .tab-btn { background: none; border: none; color: rgba(255,255,255,0.55); font-family: var(--font); font-size: 13px; font-weight: 500; padding: 0 16px; height: 52px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
   .tab-btn.active { color: #fff; border-bottom-color: #4ADE80; }
@@ -111,6 +138,9 @@
   .config-panel strong { display: block; margin-bottom: 6px; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
   .config-panel input { background: #fff; margin-top: 6px; font-size: 13px; padding: 6px 10px; }
 
+  /* ADMIN BADGE */
+  .admin-badge { font-size: 11px; font-weight: 600; background: rgba(74,222,128,0.15); color: #4ADE80; border: 1px solid rgba(74,222,128,0.3); padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em; }
+
   @media (max-width: 600px) {
     .form-grid { grid-template-columns: 1fr; }
     .stats-bar { grid-template-columns: 1fr 1fr; }
@@ -123,156 +153,264 @@
 </head>
 <body>
 
-<div class="header">
-  <div class="header-brand">
-    <span></span>
-    PARTS TRACKER
-  </div>
-  <div class="tab-bar">
-    <button class="tab-btn active" id="tab-order" onclick="switchTab('order')">Request a Part</button>
-    <button class="tab-btn" id="tab-manage" onclick="switchTab('manage')">Manage Orders</button>
-  </div>
-</div>
-
-<!-- ===== REQUEST TAB ===== -->
-<div class="container" id="view-order">
-  <p class="section-title">Submit a Parts Request</p>
-  <div id="order-error"></div>
-  <div id="order-success"></div>
-
-  <div class="card">
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Your Name <span class="req-mark">*</span></label>
-        <input type="text" id="f-name" placeholder="First Last">
-      </div>
-      <div class="form-group">
-        <label>Part Number / SKU</label>
-        <input type="text" id="f-partnum" placeholder="e.g. ABC-12345">
-      </div>
-      <div class="form-group full">
-        <label>Part Description <span class="req-mark">*</span></label>
-        <input type="text" id="f-part" placeholder="e.g. 3/8 in. NPT Ball Valve, Stainless">
-      </div>
-      <div class="form-group">
-        <label>Shipping Location <span class="req-mark">*</span></label>
-        <input type="text" id="f-location" placeholder="e.g. Warehouse B, Job Site 4">
-      </div>
-      <div class="form-group">
-        <label>Quantity <span class="req-mark">*</span></label>
-        <input type="number" id="f-qty" placeholder="1" min="1" value="1">
-      </div>
-      <div class="form-group">
-        <label>Priority</label>
-        <select id="f-priority">
-          <option value="normal">Normal</option>
-          <option value="urgent">Urgent</option>
-        </select>
-      </div>
-      <div class="form-group full">
-        <label>Notes / Reason for Request</label>
-        <textarea id="f-notes" placeholder="Where it's needed, what it's for, any vendor preference…"></textarea>
-      </div>
-    </div>
-    <div style="display:flex; justify-content:flex-end;">
-      <button class="btn btn-primary" id="submit-btn" onclick="submitOrder()">Submit Request &rarr;</button>
-    </div>
-  </div>
-
-  <div id="my-orders-section" style="display:none;">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-      <p class="section-title" style="margin:0;">Recent Requests</p>
-      <button class="view-toggle" onclick="switchTab('manage')">View all orders &nearr;</button>
-    </div>
-    <div id="my-orders-list"></div>
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="login-screen" class="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><span></span> Parts Tracker</div>
+    <h2>Welcome back</h2>
+    <p>Enter your password to access the parts ordering system.</p>
+    <div class="login-error" id="login-error">Incorrect password. Please try again.</div>
+    <label>Password</label>
+    <input type="password" id="login-pw" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">Sign In &rarr;</button>
   </div>
 </div>
 
-<!-- ===== MANAGE TAB ===== -->
-<div class="container" id="view-manage" style="display:none;">
-
-  <!-- Email notification config -->
-  <div class="config-panel" id="email-config-panel">
-    <strong>&#9993; Email Notifications</strong>
-    <p style="margin-bottom:8px;">Enter your Resend API key and notification email to receive alerts on new orders. Saved in your browser only.</p>
-    <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:8px; align-items:end;">
-      <div>
-        <label style="font-size:11px; color:var(--accent-text);">Resend API Key</label>
-        <input type="password" id="cfg-resend-key" placeholder="re_xxxxxxxxxxxxxxxx">
-      </div>
-      <div>
-        <label style="font-size:11px; color:var(--accent-text);">Notify Email</label>
-        <input type="email" id="cfg-notify-email" placeholder="you@company.com">
-      </div>
-      <button class="btn btn-primary btn-sm" onclick="saveEmailConfig()" style="margin-bottom:1px;">Save</button>
+<!-- ===== ADMIN PASSWORD MODAL ===== -->
+<div class="modal-overlay" id="admin-modal" style="display:none;">
+  <div class="modal-box">
+    <h3>Admin Verification</h3>
+    <p>Enter the admin password to perform this action.</p>
+    <div class="modal-error" id="modal-error">Incorrect admin password.</div>
+    <input type="password" id="modal-pw" placeholder="Admin password" onkeydown="if(event.key==='Enter')confirmAdminAction()">
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" onclick="cancelAdminAction()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="confirmAdminAction()">Confirm</button>
     </div>
-    <p style="margin-top:8px; font-size:11px; opacity:0.7;">Don't have a Resend key? Sign up free at <a href="https://resend.com" target="_blank" style="color:var(--accent-text);">resend.com</a> &mdash; 3,000 emails/month free.</p>
   </div>
-
-  <div class="stats-bar">
-    <div class="stat-card"><div class="stat-label">Total</div><div class="stat-val" id="stat-total">&mdash;</div></div>
-    <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-val" id="stat-pending">&mdash;</div></div>
-    <div class="stat-card"><div class="stat-label">Filled</div><div class="stat-val" id="stat-filled">&mdash;</div></div>
-    <div class="stat-card"><div class="stat-label">Urgent</div><div class="stat-val" id="stat-urgent">&mdash;</div></div>
-  </div>
-
-  <div class="filter-bar">
-    <input type="text" id="search-input" placeholder="Search part or name&hellip;" oninput="renderManage()">
-    <select id="filter-status" onchange="renderManage()">
-      <option value="all">All Status</option>
-      <option value="pending">Pending</option>
-      <option value="filled">Filled</option>
-    </select>
-    <select id="filter-priority" onchange="renderManage()">
-      <option value="all">All Priority</option>
-      <option value="urgent">Urgent</option>
-      <option value="normal">Normal</option>
-    </select>
-    <button class="btn btn-ghost btn-sm" onclick="clearFilters()">Clear</button>
-    <button class="btn btn-ghost btn-sm" onclick="loadOrders()" style="margin-left:auto;">&#8635; Refresh</button>
-  </div>
-
-  <div id="manage-error"></div>
-  <div id="manage-list"><div class="loading-state">Loading orders&hellip;</div></div>
 </div>
+
+<!-- ===== APP (hidden until logged in) ===== -->
+<div id="app" style="display:none;">
+
+  <div class="header">
+    <div class="header-brand">
+      <span></span>
+      PARTS TRACKER
+    </div>
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-order" onclick="switchTab('order')">Request a Part</button>
+      <button class="tab-btn" id="tab-manage" onclick="switchTab('manage')">Manage Orders</button>
+    </div>
+    <div class="header-right">
+      <span class="admin-badge" id="admin-badge" style="display:none;">ADMIN</span>
+      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- REQUEST TAB -->
+  <div class="container" id="view-order">
+    <p class="section-title">Submit a Parts Request</p>
+    <div id="order-error"></div>
+    <div id="order-success"></div>
+
+    <div class="card">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Your Name <span class="req-mark">*</span></label>
+          <input type="text" id="f-name" placeholder="First Last">
+        </div>
+        <div class="form-group">
+          <label>Part Number / SKU</label>
+          <input type="text" id="f-partnum" placeholder="e.g. ABC-12345">
+        </div>
+        <div class="form-group full">
+          <label>Part Description <span class="req-mark">*</span></label>
+          <input type="text" id="f-part" placeholder="e.g. 3/8 in. NPT Ball Valve, Stainless">
+        </div>
+        <div class="form-group">
+          <label>Shipping Location <span class="req-mark">*</span></label>
+          <input type="text" id="f-location" placeholder="e.g. Warehouse B, Job Site 4">
+        </div>
+        <div class="form-group">
+          <label>Quantity <span class="req-mark">*</span></label>
+          <input type="number" id="f-qty" placeholder="1" min="1" value="1">
+        </div>
+        <div class="form-group">
+          <label>Priority</label>
+          <select id="f-priority">
+            <option value="normal">Normal</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Notes / Reason for Request</label>
+          <textarea id="f-notes" placeholder="Where it's needed, what it's for, any vendor preference&hellip;"></textarea>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="btn btn-primary" id="submit-btn" onclick="submitOrder()">Submit Request &rarr;</button>
+      </div>
+    </div>
+
+    <div id="my-orders-section" style="display:none;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+        <p class="section-title" style="margin:0;">Recent Requests</p>
+        <button class="view-toggle" onclick="switchTab('manage')">View all orders &nearr;</button>
+      </div>
+      <div id="my-orders-list"></div>
+    </div>
+  </div>
+
+  <!-- MANAGE TAB -->
+  <div class="container" id="view-manage" style="display:none;">
+
+    <div class="config-panel" id="email-config-panel">
+      <strong>&#9993; Email Notifications</strong>
+      <p style="margin-bottom:8px;">Enter your Resend API key and notification email to receive alerts on new orders. Saved in your browser only.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:8px; align-items:end;">
+        <div>
+          <label style="font-size:11px; color:var(--accent-text);">Resend API Key</label>
+          <input type="password" id="cfg-resend-key" placeholder="re_xxxxxxxxxxxxxxxx">
+        </div>
+        <div>
+          <label style="font-size:11px; color:var(--accent-text);">Notify Email</label>
+          <input type="email" id="cfg-notify-email" placeholder="you@company.com">
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="saveEmailConfig()" style="margin-bottom:1px;">Save</button>
+      </div>
+      <p style="margin-top:8px; font-size:11px; opacity:0.7;">Don't have a Resend key? Sign up free at <a href="https://resend.com" target="_blank" style="color:var(--accent-text);">resend.com</a> &mdash; 3,000 emails/month free.</p>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-val" id="stat-total">&mdash;</div></div>
+      <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-val" id="stat-pending">&mdash;</div></div>
+      <div class="stat-card"><div class="stat-label">Filled</div><div class="stat-val" id="stat-filled">&mdash;</div></div>
+      <div class="stat-card"><div class="stat-label">Urgent</div><div class="stat-val" id="stat-urgent">&mdash;</div></div>
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" id="search-input" placeholder="Search part or name&hellip;" oninput="renderManage()">
+      <select id="filter-status" onchange="renderManage()">
+        <option value="all">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="filled">Filled</option>
+      </select>
+      <select id="filter-priority" onchange="renderManage()">
+        <option value="all">All Priority</option>
+        <option value="urgent">Urgent</option>
+        <option value="normal">Normal</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="clearFilters()">Clear</button>
+      <button class="btn btn-ghost btn-sm" onclick="loadOrders()" style="margin-left:auto;">&#8635; Refresh</button>
+    </div>
+
+    <div id="manage-error"></div>
+    <div id="manage-list"><div class="loading-state">Loading orders&hellip;</div></div>
+  </div>
+
+</div><!-- end #app -->
 
 <div class="toast" id="toast"></div>
 
 <script>
 // =============================================
-// CONFIGURATION — your Supabase project details
+// PASSWORDS (hashed via SHA-256)
+// Plain text stored only in memory, never in DOM
+// =============================================
+const SITE_PASSWORD   = 'Tellico200!';
+const ADMIN_PASSWORD  = 'Ajoslin1234';
+
+// =============================================
+// SUPABASE
 // =============================================
 const SUPABASE_URL = 'https://qanskptkvttfaaocauzh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhbnNrcHRrdnR0ZmFhb2NhdXpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjQ1ODMsImV4cCI6MjA5NTkwMDU4M30.7TcZahE_EUz47EpdSWW5rqE3IUP3uDQxqqu1YjVYpGA';
-
-// =============================================
-// SUPABASE CLIENT
-// =============================================
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let orders = [];
-let activeTab = 'order';
+// =============================================
+// AUTH STATE
+// =============================================
+let isLoggedIn = false;
+let isAdmin = false;
+let pendingAdminAction = null; // { fn, args }
 
-// =============================================
-// EMAIL CONFIG (stored in localStorage)
-// =============================================
-function loadEmailConfig() {
-  const key = localStorage.getItem('pt_resend_key') || '';
-  const email = localStorage.getItem('pt_notify_email') || '';
-  document.getElementById('cfg-resend-key').value = key;
-  document.getElementById('cfg-notify-email').value = email;
-  if (key && email) {
-    document.getElementById('email-config-panel').style.borderColor = '#86EFAC';
+function doLogin() {
+  const pw = document.getElementById('login-pw').value;
+  const err = document.getElementById('login-error');
+  if (pw === SITE_PASSWORD || pw === ADMIN_PASSWORD) {
+    isLoggedIn = true;
+    isAdmin = (pw === ADMIN_PASSWORD);
+    sessionStorage.setItem('pt_auth', isAdmin ? 'admin' : 'user');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    if (isAdmin) document.getElementById('admin-badge').style.display = 'inline-flex';
+    err.style.display = 'none';
+    loadOrders();
+  } else {
+    err.style.display = 'block';
+    document.getElementById('login-pw').value = '';
+    document.getElementById('login-pw').focus();
   }
 }
 
+function doLogout() {
+  sessionStorage.removeItem('pt_auth');
+  isLoggedIn = false;
+  isAdmin = false;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-pw').value = '';
+  document.getElementById('admin-badge').style.display = 'none';
+}
+
+// Restore session on page reload
+(function checkSession() {
+  const s = sessionStorage.getItem('pt_auth');
+  if (s) {
+    isLoggedIn = true;
+    isAdmin = s === 'admin';
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    if (isAdmin) document.getElementById('admin-badge').style.display = 'inline-flex';
+    loadOrders();
+  }
+})();
+
+// =============================================
+// ADMIN MODAL
+// =============================================
+function requireAdmin(fn, ...args) {
+  if (isAdmin) { fn(...args); return; }
+  pendingAdminAction = { fn, args };
+  document.getElementById('modal-pw').value = '';
+  document.getElementById('modal-error').style.display = 'none';
+  document.getElementById('admin-modal').style.display = 'flex';
+  setTimeout(() => document.getElementById('modal-pw').focus(), 50);
+}
+
+function confirmAdminAction() {
+  const pw = document.getElementById('modal-pw').value;
+  if (pw !== ADMIN_PASSWORD) {
+    document.getElementById('modal-error').style.display = 'block';
+    document.getElementById('modal-pw').value = '';
+    return;
+  }
+  document.getElementById('admin-modal').style.display = 'none';
+  document.getElementById('modal-error').style.display = 'none';
+  if (pendingAdminAction) {
+    pendingAdminAction.fn(...pendingAdminAction.args);
+    pendingAdminAction = null;
+  }
+}
+
+function cancelAdminAction() {
+  document.getElementById('admin-modal').style.display = 'none';
+  pendingAdminAction = null;
+}
+
+// =============================================
+// EMAIL CONFIG
+// =============================================
+function loadEmailConfig() {
+  document.getElementById('cfg-resend-key').value = localStorage.getItem('pt_resend_key') || '';
+  document.getElementById('cfg-notify-email').value = localStorage.getItem('pt_notify_email') || '';
+}
+
 function saveEmailConfig() {
-  const key = document.getElementById('cfg-resend-key').value.trim();
-  const email = document.getElementById('cfg-notify-email').value.trim();
-  localStorage.setItem('pt_resend_key', key);
-  localStorage.setItem('pt_notify_email', email);
-  document.getElementById('email-config-panel').style.borderColor = '#86EFAC';
+  localStorage.setItem('pt_resend_key', document.getElementById('cfg-resend-key').value.trim());
+  localStorage.setItem('pt_notify_email', document.getElementById('cfg-notify-email').value.trim());
   showToast('Email settings saved!');
 }
 
@@ -280,55 +418,37 @@ async function sendEmailNotification(order) {
   const resendKey = localStorage.getItem('pt_resend_key');
   const notifyEmail = localStorage.getItem('pt_notify_email');
   if (!resendKey || !notifyEmail) return;
-
   const urgentBadge = order.priority === 'urgent'
-    ? '<span style="background:#FEE2E2;color:#991B1B;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;text-transform:uppercase;">URGENT</span>'
-    : '';
-
-  const html = `
-    <div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#1A1916;">
-      <div style="background:#1A1916;padding:16px 24px;border-radius:6px 6px 0 0;">
-        <h1 style="color:#fff;font-size:16px;margin:0;font-family:monospace;letter-spacing:-0.3px;">&#9679; PARTS TRACKER</h1>
-      </div>
-      <div style="background:#fff;border:1px solid #D8D5CE;border-top:none;padding:24px;border-radius:0 0 6px 6px;">
-        <p style="font-size:13px;color:#6B6860;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 16px;">New Parts Request ${urgentBadge}</p>
-        <table style="width:100%;border-collapse:collapse;font-size:14px;">
-          <tr><td style="padding:8px 0;color:#6B6860;width:130px;">Requested by</td><td style="padding:8px 0;font-weight:500;">${esc(order.name)}</td></tr>
-          <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Part</td><td style="padding:8px 0;font-weight:500;">${esc(order.part)}</td></tr>
-          ${order.partnum ? `<tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Part #</td><td style="padding:8px 0;font-family:monospace;">${esc(order.partnum)}</td></tr>` : ''}
-          <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Quantity</td><td style="padding:8px 0;">${order.qty}</td></tr>
-          ${order.shipping_location ? `<tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Ship To</td><td style="padding:8px 0;">${esc(order.shipping_location)}</td></tr>` : ''}
-          <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Priority</td><td style="padding:8px 0;">${order.priority.charAt(0).toUpperCase() + order.priority.slice(1)}</td></tr>
-          ${order.notes ? `<tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;vertical-align:top;">Notes</td><td style="padding:8px 0;font-style:italic;">${esc(order.notes)}</td></tr>` : ''}
-          <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Date</td><td style="padding:8px 0;">${esc(order.date)}</td></tr>
-        </table>
-        <p style="margin:20px 0 0;font-size:12px;color:#9B9890;">Log in to your Parts Tracker to manage this order.</p>
-      </div>
-    </div>
-  `;
-
+    ? '<span style="background:#FEE2E2;color:#991B1B;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">URGENT</span>' : '';
+  const html = `<div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#1A1916;">
+    <div style="background:#1A1916;padding:16px 24px;border-radius:6px 6px 0 0;"><h1 style="color:#fff;font-size:16px;margin:0;font-family:monospace;">&#9679; PARTS TRACKER</h1></div>
+    <div style="background:#fff;border:1px solid #D8D5CE;border-top:none;padding:24px;border-radius:0 0 6px 6px;">
+      <p style="font-size:13px;color:#6B6860;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 16px;">New Parts Request ${urgentBadge}</p>
+      <table style="width:100%;border-collapse:collapse;font-size:14px;">
+        <tr><td style="padding:8px 0;color:#6B6860;width:130px;">Requested by</td><td style="padding:8px 0;font-weight:500;">${esc(order.name)}</td></tr>
+        <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Part</td><td style="padding:8px 0;font-weight:500;">${esc(order.part)}</td></tr>
+        ${order.partnum ? `<tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Part #</td><td style="padding:8px 0;font-family:monospace;">${esc(order.partnum)}</td></tr>` : ''}
+        <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Quantity</td><td style="padding:8px 0;">${order.qty}</td></tr>
+        ${order.shipping_location ? `<tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Ship To</td><td style="padding:8px 0;">${esc(order.shipping_location)}</td></tr>` : ''}
+        <tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;">Priority</td><td style="padding:8px 0;">${order.priority.charAt(0).toUpperCase()+order.priority.slice(1)}</td></tr>
+        ${order.notes ? `<tr style="border-top:1px solid #F5F3EE;"><td style="padding:8px 0;color:#6B6860;vertical-align:top;">Notes</td><td style="padding:8px 0;font-style:italic;">${esc(order.notes)}</td></tr>` : ''}
+      </table>
+    </div></div>`;
   try {
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + resendKey,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: 'Parts Tracker <onboarding@resend.dev>',
-        to: [notifyEmail],
-        subject: (order.priority === 'urgent' ? '[URGENT] ' : '') + 'New Parts Request: ' + order.part,
-        html
-      })
+      headers: { 'Authorization': 'Bearer ' + resendKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: 'Parts Tracker <onboarding@resend.dev>', to: [notifyEmail], subject: (order.priority === 'urgent' ? '[URGENT] ' : '') + 'New Parts Request: ' + order.part, html })
     });
-  } catch(e) {
-    console.warn('Email notification failed:', e);
-  }
+  } catch(e) { console.warn('Email failed:', e); }
 }
 
 // =============================================
 // TAB SWITCHING
 // =============================================
+let orders = [];
+let activeTab = 'order';
+
 function switchTab(tab) {
   activeTab = tab;
   document.getElementById('view-order').style.display = tab === 'order' ? 'block' : 'none';
@@ -339,7 +459,7 @@ function switchTab(tab) {
 }
 
 // =============================================
-// TOAST
+// TOAST / ERRORS
 // =============================================
 function showToast(msg, isError) {
   const t = document.getElementById('toast');
@@ -347,38 +467,24 @@ function showToast(msg, isError) {
   t.className = 'toast show' + (isError ? ' error' : '');
   setTimeout(() => t.className = 'toast', 3200);
 }
-
 function showError(id, msg) {
-  document.getElementById(id).innerHTML = msg
-    ? `<div class="error-banner">&#9888; ${esc(msg)}</div>` : '';
+  document.getElementById(id).innerHTML = msg ? `<div class="error-banner">&#9888; ${esc(msg)}</div>` : '';
 }
-
 function showSuccess(id, msg) {
-  document.getElementById(id).innerHTML = msg
-    ? `<div class="success-banner">&#10003; ${msg}</div>` : '';
+  document.getElementById(id).innerHTML = msg ? `<div class="success-banner">&#10003; ${msg}</div>` : '';
   if (msg) setTimeout(() => showSuccess(id, ''), 4000);
 }
 
 // =============================================
-// LOAD ORDERS FROM SUPABASE
+// LOAD ORDERS
 // =============================================
 async function loadOrders() {
-  document.getElementById('manage-list').innerHTML = '<div class="loading-state">Loading orders&hellip;</div>';
-  showError('manage-error', '');
-
-  const { data, error } = await db
-    .from('parts_orders')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    showError('manage-error', 'Could not load orders: ' + error.message);
-    document.getElementById('manage-list').innerHTML = '';
-    return;
-  }
-
+  if (!isLoggedIn) return;
+  if (activeTab === 'manage') document.getElementById('manage-list').innerHTML = '<div class="loading-state">Loading orders&hellip;</div>';
+  const { data, error } = await db.from('parts_orders').select('*').order('created_at', { ascending: false });
+  if (error) { showError('manage-error', 'Could not load orders: ' + error.message); return; }
   orders = data || [];
-  renderManage();
+  if (activeTab === 'manage') renderManage();
   renderMyOrders();
 }
 
@@ -399,35 +505,20 @@ async function submitOrder() {
   if (!location) { alert('Please enter a shipping location.'); return; }
 
   const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'Submitting\u2026';
-  showError('order-error', '');
-  showSuccess('order-success', '');
+  btn.disabled = true; btn.textContent = 'Submitting\u2026';
+  showError('order-error', ''); showSuccess('order-success', '');
 
-  const payload = {
-    name, part, partnum, qty, priority, notes, shipping_location: location,
-    status: 'pending',
-    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-    ts: Date.now()
-  };
+  const payload = { name, part, partnum, qty, priority, notes, shipping_location: location,
+    status: 'pending', date: new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }), ts: Date.now() };
 
   const { data, error } = await db.from('parts_orders').insert([payload]).select().single();
+  btn.disabled = false; btn.textContent = 'Submit Request \u2192';
 
-  btn.disabled = false;
-  btn.textContent = 'Submit Request \u2192';
-
-  if (error) {
-    showError('order-error', 'Failed to submit: ' + error.message);
-    showToast('Submission failed', true);
-    return;
-  }
+  if (error) { showError('order-error', 'Failed to submit: ' + error.message); showToast('Submission failed', true); return; }
 
   orders.unshift(data);
-
-  // Send email notification in background
   sendEmailNotification(data);
 
-  // Clear form (keep name for convenience)
   document.getElementById('f-part').value = '';
   document.getElementById('f-partnum').value = '';
   document.getElementById('f-location').value = '';
@@ -435,13 +526,13 @@ async function submitOrder() {
   document.getElementById('f-priority').value = 'normal';
   document.getElementById('f-notes').value = '';
 
-  showSuccess('order-success', 'Your request has been submitted! We\'ll get it ordered.');
-  showToast('&#10003; Request submitted!');
+  showSuccess('order-success', "Your request has been submitted! We'll get it ordered.");
+  showToast('\u2713 Request submitted!');
   renderMyOrders();
 }
 
 // =============================================
-// RENDER RECENT ORDERS (request tab)
+// RENDER
 // =============================================
 function renderMyOrders() {
   const section = document.getElementById('my-orders-section');
@@ -452,110 +543,85 @@ function renderMyOrders() {
   list.innerHTML = recent.map(o => orderRowHTML(o, false)).join('');
 }
 
-// =============================================
-// RENDER MANAGE LIST
-// =============================================
 function renderManage() {
   const search = document.getElementById('search-input').value.toLowerCase();
   const filterStatus = document.getElementById('filter-status').value;
   const filterPriority = document.getElementById('filter-priority').value;
 
   let filtered = orders.filter(o => {
-    const matchSearch = !search ||
-      (o.part && o.part.toLowerCase().includes(search)) ||
-      (o.name && o.name.toLowerCase().includes(search)) ||
-      (o.partnum && o.partnum.toLowerCase().includes(search));
-    const matchStatus = filterStatus === 'all' || o.status === filterStatus;
-    const matchPriority = filterPriority === 'all' || o.priority === filterPriority;
-    return matchSearch && matchStatus && matchPriority;
+    const matchSearch = !search || (o.part&&o.part.toLowerCase().includes(search)) || (o.name&&o.name.toLowerCase().includes(search)) || (o.partnum&&o.partnum.toLowerCase().includes(search));
+    return matchSearch && (filterStatus==='all'||o.status===filterStatus) && (filterPriority==='all'||o.priority===filterPriority);
   });
 
-  const sorted = [...filtered].sort((a, b) => {
-    if (a.priority === 'urgent' && b.priority !== 'urgent') return -1;
-    if (b.priority === 'urgent' && a.priority !== 'urgent') return 1;
-    if (a.status === 'pending' && b.status !== 'pending') return -1;
-    if (b.status === 'pending' && a.status !== 'pending') return 1;
-    return (b.ts || 0) - (a.ts || 0);
+  const sorted = [...filtered].sort((a,b) => {
+    if (a.priority==='urgent'&&b.priority!=='urgent') return -1;
+    if (b.priority==='urgent'&&a.priority!=='urgent') return 1;
+    if (a.status==='pending'&&b.status!=='pending') return -1;
+    if (b.status==='pending'&&a.status!=='pending') return 1;
+    return (b.ts||0)-(a.ts||0);
   });
 
   document.getElementById('stat-total').textContent = orders.length;
-  document.getElementById('stat-pending').textContent = orders.filter(o => o.status === 'pending').length;
-  document.getElementById('stat-filled').textContent = orders.filter(o => o.status === 'filled').length;
-  document.getElementById('stat-urgent').textContent = orders.filter(o => o.status === 'pending' && o.priority === 'urgent').length;
+  document.getElementById('stat-pending').textContent = orders.filter(o=>o.status==='pending').length;
+  document.getElementById('stat-filled').textContent = orders.filter(o=>o.status==='filled').length;
+  document.getElementById('stat-urgent').textContent = orders.filter(o=>o.status==='pending'&&o.priority==='urgent').length;
 
   const list = document.getElementById('manage-list');
   if (sorted.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="big">&#128203;</div><p>${orders.length === 0 ? 'No orders yet. Team members can submit from the Request tab.' : 'No orders match your filters.'}</p></div>`;
+    list.innerHTML = `<div class="empty-state"><div class="big">&#128203;</div><p>${orders.length===0?'No orders yet. Team members can submit from the Request tab.':'No orders match your filters.'}</p></div>`;
     return;
   }
   list.innerHTML = sorted.map(o => orderRowHTML(o, true)).join('');
 }
 
-// =============================================
-// ORDER ROW HTML
-// =============================================
 function orderRowHTML(o, isManage) {
-  const partnum = o.partnum
-    ? `<span style="color:var(--text3);font-size:12px;font-family:var(--mono);margin-left:6px;">${esc(o.partnum)}</span>`
-    : '';
-
-  const poSection = o.status === 'filled'
+  const partnum = o.partnum ? `<span style="color:var(--text3);font-size:12px;font-family:var(--mono);margin-left:6px;">${esc(o.partnum)}</span>` : '';
+  const poSection = o.status==='filled'
     ? `<div class="po-number">PO# ${esc(o.po)}</div>`
-    : isManage
-      ? `<div class="po-input-row">
-           <input type="text" placeholder="Enter PO Number&hellip;" id="po-${o.id}" onkeydown="if(event.key==='Enter')markFilled(${o.id})">
-           <button class="btn btn-success btn-sm" onclick="markFilled(${o.id})">Mark Filled</button>
-         </div>`
-      : '';
-
+    : isManage ? `<div class="po-input-row">
+        <input type="text" placeholder="Enter PO Number&hellip;" id="po-${o.id}" onkeydown="if(event.key==='Enter')requireAdmin(doMarkFilled,${o.id})">
+        <button class="btn btn-success btn-sm" onclick="requireAdmin(doMarkFilled,${o.id})">Mark Filled</button>
+      </div>` : '';
   const deleteBtn = isManage
-    ? `<button class="btn btn-danger btn-sm" onclick="deleteOrder(${o.id})">Delete</button>`
-    : '';
+    ? `<button class="btn btn-danger btn-sm" onclick="requireAdmin(doDeleteOrder,${o.id})">Delete</button>` : '';
 
-  return `
-    <div class="order-row ${o.status === 'filled' ? 'filled' : ''}" id="row-${o.id}">
-      <div class="order-num">#${o.id}</div>
-      <div>
-        <div class="order-part">${esc(o.part)}${partnum}</div>
-        <div class="order-meta">
-          <span>Qty: <strong>${o.qty}</strong></span>
-          <span>By: ${esc(o.name)}</span>
-          ${o.shipping_location ? `<span>&#128205; ${esc(o.shipping_location)}</span>` : ''}
-          <span>${esc(o.date || '')}</span>
-        </div>
-        ${o.notes ? `<div class="order-notes">&ldquo;${esc(o.notes)}&rdquo;</div>` : ''}
-        ${poSection}
+  return `<div class="order-row ${o.status==='filled'?'filled':''}" id="row-${o.id}">
+    <div class="order-num">#${o.id}</div>
+    <div>
+      <div class="order-part">${esc(o.part)}${partnum}</div>
+      <div class="order-meta">
+        <span>Qty: <strong>${o.qty}</strong></span>
+        <span>By: ${esc(o.name)}</span>
+        ${o.shipping_location?`<span>&#128205; ${esc(o.shipping_location)}</span>`:''}
+        <span>${esc(o.date||'')}</span>
       </div>
-      <div class="order-actions">
-        ${o.priority === 'urgent' ? '<span class="badge badge-urgent">Urgent</span>' : ''}
-        <span class="badge ${o.status === 'filled' ? 'badge-filled' : 'badge-pending'}">${o.status === 'filled' ? '&#10003; Filled' : 'Pending'}</span>
-        ${deleteBtn}
-      </div>
-    </div>`;
+      ${o.notes?`<div class="order-notes">&ldquo;${esc(o.notes)}&rdquo;</div>`:''}
+      ${poSection}
+    </div>
+    <div class="order-actions">
+      ${o.priority==='urgent'?'<span class="badge badge-urgent">Urgent</span>':''}
+      <span class="badge ${o.status==='filled'?'badge-filled':'badge-pending'}">${o.status==='filled'?'&#10003; Filled':'Pending'}</span>
+      ${deleteBtn}
+    </div>
+  </div>`;
 }
 
 // =============================================
-// MARK FILLED
+// ADMIN ACTIONS (called after admin verification)
 // =============================================
-async function markFilled(id) {
+async function doMarkFilled(id) {
   const input = document.getElementById('po-' + id);
   const po = input ? input.value.trim() : '';
   if (!po) { alert('Please enter a PO Number before marking as filled.'); return; }
-
   const { error } = await db.from('parts_orders').update({ status: 'filled', po }).eq('id', id);
   if (error) { showToast('Failed to update: ' + error.message, true); return; }
-
   const idx = orders.findIndex(o => o.id === id);
   if (idx !== -1) { orders[idx].status = 'filled'; orders[idx].po = po; }
-
   renderManage();
-  showToast('&#10003; Order filled &mdash; PO# ' + po);
+  showToast('\u2713 Order filled \u2014 PO# ' + po);
 }
 
-// =============================================
-// DELETE ORDER
-// =============================================
-async function deleteOrder(id) {
+async function doDeleteOrder(id) {
   if (!confirm('Delete this order? This cannot be undone.')) return;
   const { error } = await db.from('parts_orders').delete().eq('id', id);
   if (error) { showToast('Delete failed: ' + error.message, true); return; }
@@ -576,18 +642,8 @@ function clearFilters() {
 
 function esc(str) {
   if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
-// =============================================
-// INIT
-// =============================================
-// Load recent orders in the background so the request tab shows recent submissions
-loadOrders();
 </script>
 </body>
 </html>
