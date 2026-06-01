@@ -403,20 +403,21 @@ function cancelAdminAction() {
 // =============================================
 // EMAIL CONFIG
 // =============================================
+const RESEND_API_KEY = 're_Vui9Es24_BbyBHdkcM31SXoUxnBbS7ADR';
+const NOTIFY_EMAIL   = 'alex.joslin@tellicocoin.com';
+
 function loadEmailConfig() {
-  document.getElementById('cfg-resend-key').value = localStorage.getItem('pt_resend_key') || '';
-  document.getElementById('cfg-notify-email').value = localStorage.getItem('pt_notify_email') || '';
+  document.getElementById('cfg-resend-key').value = '(pre-configured)';
+  document.getElementById('cfg-notify-email').value = NOTIFY_EMAIL;
 }
 
 function saveEmailConfig() {
-  localStorage.setItem('pt_resend_key', document.getElementById('cfg-resend-key').value.trim());
-  localStorage.setItem('pt_notify_email', document.getElementById('cfg-notify-email').value.trim());
-  showToast('Email settings saved!');
+  showToast('Email notifications are already configured.');
 }
 
 async function sendEmailNotification(order) {
-  const resendKey = localStorage.getItem('pt_resend_key');
-  const notifyEmail = localStorage.getItem('pt_notify_email');
+  const resendKey = RESEND_API_KEY;
+  const notifyEmail = NOTIFY_EMAIL;
   if (!resendKey || !notifyEmail) return;
   const urgentBadge = order.priority === 'urgent'
     ? '<span style="background:#FEE2E2;color:#991B1B;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">URGENT</span>' : '';
